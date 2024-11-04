@@ -6,27 +6,32 @@ async function fetchTickets() {
         const response = await fetch('https://jsonplaceholder.typicode.com/posts');
 
         if (!response.ok) {
-            throw new Error('Failed to fetch tickets');
+            throw new Error('Failed to fetch tickets. Please try again later.');
         }
 
         const data = await response.json();
 
         if (data.length === 0) {
-            throw new Error('No ticket found');
+            throw new Error('No tickets found.');
         }
 
+        let ticketsHTML = '';
         data.forEach(ticket => {
-            const ticketElement = document.createElement('div');
-            ticketElement.innerHTML = `
-                <h2>${ticket.title}</h2>
-                <p>${ticket.body}</p>
-                <hr>
+            ticketsHTML += `
+                <div>
+                    <p><strong>Ticket ID:</strong> ${ticket.id}</p>
+                    <p><strong>Customer Name:</strong> Customer #${ticket.userId}</p>
+                    <p><strong>Issue Description:</strong> ${ticket.title}</p>
+                    <p><strong>Details:</strong> ${ticket.body}</p>
+                    <hr>
+                </div>
             `;
-            ticketContainer.appendChild(ticketElement);
         });
+
+        ticketContainer.insertAdjacentHTML('beforeend', ticketsHTML);
     } catch (error) {
         console.error('Error:', error);
-        errorMessage.innerHTML = `<p style="color: red;">${error.message}</p>`;
+        errorMessage.insertAdjacentHTML('beforeend', `<p style="color: red;">${error.message}</p>`);
     }
 }
 
